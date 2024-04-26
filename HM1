@@ -4,20 +4,20 @@ c=65836583653865833
 a=85476384703740700
 b=x + c
 d=a+y
-если(d*b>x**3):
- печать ("приятная")
+if(d*b>x**3):
+ print ("good")
 elif(d*b<x**2):
- печать ("плохая")
-элиф(d*b==x**2):
- печать ("равно")
-ещё:
- печатать ("наплевать")
+ print ("bad")
+elif(d*b==x**2):
+ print ("equal")
+else:
+ print ("dont care")
 
 
 q=111
 w=222
 e=333
 if(q+e==w+w):
- печать ("равно")
-elif(w + q<w+w) и (q==w-q или w==e+e+e):
- печать (True)
+ print ("equal")
+elif(w + q<w+w) and (q==w-q or w==e+e+e):
+ print (True)
