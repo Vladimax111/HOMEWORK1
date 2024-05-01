@@ -1,23 +1,41 @@
-x=32495695692598592
-y=58253823562856825
-c=65836583653865833
-a=85476384703740700
-b=x + c
-d=a+y
-if(d*b>x**3):
- print ("good")
-elif(d*b<x**2):
- print ("bad")
-elif(d*b==x**2):
- print ("equal")
-else:
- print ("dont care")
+x = 38
 
+print('дратути')
+if x < 0:
+    print('меньше нуля')
+print("дотвидания")
+a, b = 10, 5
 
-q=111
-w=222
-e=333
-if(q+e==w+w):
- print ("equal")
-elif(w + q<w+w) and (q==w-q or w==e+e+e):
- print (True)
+if a > b:
+    print('a > b')
+
+if a > b and a > 0:
+    print('успех')
+
+if (a > b) and (a > 0 or b < 1000):
+    print('успех')
+
+if 5 < b and b < 10:
+    print('успех')
+
+if "34" > "123":
+    print('успех')
+
+if '123' > '12':
+    print('успех')
+    
+if [1, 2] > [1, 1]:
+    print('успех')
+    
+    #нельзя сравнивать разные типы
+
+if '6' > 5:
+    print('успех')
+    
+if [5, 6] > 5:
+    print('успех')
+    
+#но
+
+if '6' != 5:
+    print('успех')
