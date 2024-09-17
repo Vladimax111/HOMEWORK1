@@ -1,0 +1,12 @@
+first = ['Strings', 'Student', 'Computers']
+second = ['Строка', 'Урбан', 'Компьютер']
+
+# Генераторная сборка для first_result
+first_result = (abs(len(a) - len(b)) for a, b in zip(first, second) if len(a) != len(b))
+
+# Генераторная сборка для second_result
+second_result = (len(first[i]) == len(second[i]) for i in range(len(first)))
+
+# Пример выполнения кода
+print(list(first_result))
+print(list(second_result))
