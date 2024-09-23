@@ -1,0 +1,14 @@
+import pandas as pd
+
+# Чтение данных из CSV-файла
+data = pd.read_csv('data.csv')
+
+# Простой анализ данных: вывод первых 5 строк
+print(data.head())
+
+# Простой анализ данных: вывод статистики
+print(data.describe())
+
+# Простой анализ данных: фильтрация данных
+filtered_data = data[data['column_name'] > 10]
+print(filtered_data)
