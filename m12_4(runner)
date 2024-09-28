@@ -1,0 +1,18 @@
+class Runner:
+    def __init__(self, name, speed):
+        if not isinstance(name, str):
+            raise TypeError("Name must be a string")
+        if speed < 0:
+            raise ValueError("Speed must be a non-negative number")
+        self.name = name
+        self.speed = speed
+        self.distance = 0
+
+    def __eq__(self, other):
+        return self.name == other.name
+
+    def run(self, distance):
+        self.distance += distance * self.speed
+
+    def walk(self, distance):
+        self.distance += distance * (self.speed / 2)
