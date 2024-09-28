@@ -1,0 +1,43 @@
+import unittest
+import logging
+from runner import Runner
+
+# Настройка логирования
+logging.basicConfig(
+    level=logging.INFO,
+    filename='runner_tests.log',
+    filemode='w',
+    encoding='utf-8',
+    format='%(levelname)s: %(message)s'
+)
+
+class RunnerTest(unittest.TestCase):
+    is_frozen = False
+
+    @classmethod
+    def setUpClass(cls):
+        cls.runner = Runner(name="TestRunner", speed=5)
+
+    def test_walk(self):
+        try:
+            runner = Runner(name="TestRunner", speed=-5)
+            runner.walk(10)
+            logging.info('"test_walk" выполнен успешно')
+        except ValueError:
+            logging.warning("Неверная скорость для Runner")
+
+    def test_run(self):
+        try:
+            runner = Runner(name=123, speed=5)
+            runner.run(10)
+            logging.info('"test_run" выполнен успешно')
+        except TypeError:
+            logging.warning("Неверный тип данных для объекта Runner")
+
+    @unittest.skipIf(is_frozen, 'Тесты в этом кейсе заморожены')
+    def test_challenge(self):
+        self.runner.run(20)
+        self.assertEqual(self.runner.distance, 100)
+
+if __name__ == '__main__':
+    unittest.main()
