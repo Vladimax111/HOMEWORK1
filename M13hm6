@@ -1,0 +1,88 @@
+import logging
+from aiogram import Bot, Dispatcher, types
+from aiogram.dispatcher.filters.state import State, StatesGroup
+from aiogram.utils import executor
+from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+
+# Настройка логирования
+logging.basicConfig(level=logging.INFO)
+
+# Инициализация бота и диспетчера
+API_TOKEN = 'YOUR_BOT_API_TOKEN'
+bot = Bot(token=API_TOKEN)
+dp = Dispatcher(bot)
+
+# Создание класса UserState
+class UserState(StatesGroup):
+    age = State()
+    growth = State()
+    weight = State()
+
+# Функция для обработки состояния age
+async def set_age(call: CallbackQuery):
+    await call.message.answer("Введите свой возраст:")
+    await UserState.age.set()
+
+# Функция для обработки состояния growth
+async def set_growth(message: types.Message, state: UserState):
+    await message.answer("Введите свой рост:")
+    await UserState.growth.set()
+
+# Функция для обработки состояния weight
+async def set_weight(message: types.Message, state: UserState):
+    await message.answer("Введите свой вес:")
+    await UserState.weight.set()
+
+# Функция для отправки калорий
+async def send_calories(message: types.Message, state: UserState):
+    data = await state.get_data()
+    age = int(data.get('age', 0))
+    growth = int(data.get('growth', 0))
+    weight = int(data.get('weight', 0))
+
+    # Формула Миффлина - Сан Жеора для подсчета нормы калорий
+    calories = 10 * weight + 6.25 * growth - 5 * age + 5
+
+    await message.answer(f"Ваша норма калорий: {calories} ккал")
+    await state.finish()
+
+# Обработчик сообщений
+@dp.message_handler(commands=['calories'], state='*')
+async def message_handler(message: types.Message):
+    state = dp.current_state(user=message.from_user.id)
+    if message.text == 'Рассчитать':
+        await set_age(message)
+    elif await state.get_state() == UserState.age.state:
+        await state.update_data(age=message.text)
+        await set_growth(message, state)
+    elif await state.get_state() == UserState.growth.state:
+        await state.update_data(growth=message.text)
+        await set_weight(message, state)
+    elif await state.get_state() == UserState.weight.state:
+        await state.update_data(weight=message.text)
+        await send_calories(message, state)
+
+# Функция для старта бота
+@dp.message_handler(commands=['start'])
+async def start(message: types.Message):
+    # Создание Inline-клавиатуры
+    markup = InlineKeyboardMarkup()
+    markup.add(InlineKeyboardButton('Рассчитать норму калорий', callback_data='calories'))
+    markup.add(InlineKeyboardButton('Формулы расчёта', callback_data='formulas'))
+
+    await message.answer("Привет! Выберите действие:", reply_markup=markup)
+
+# Функция для обработки Inline-клавиатуры
+@dp.callback_query_handler(lambda c: c.data == 'calories')
+async def main_menu(call: CallbackQuery):
+    await call.message.answer("Выберите опцию:")
+    await set_age(call)
+
+# Функция для отправки формул
+@dp.callback_query_handler(lambda c: c.data == 'formulas')
+async def get_formulas(call: CallbackQuery):
+    await call.message.answer("Формула Миффлина - Сан Жеора для подсчета нормы калорий: 10 * weight + 6.25 * growth - 5 * age + 5")
+
+# Запуск бота
+if __name__ == '__main__':
+    executor.start_polling(dp, skip_updates=True)
