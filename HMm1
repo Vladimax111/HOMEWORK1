@@ -1,0 +1,33 @@
+# 1st program
+result = (9 ** 0.5) * 5
+print(result)
+
+# 2nd program
+is_greater = 9.99 > 9.98
+is_not_equal = 1000 != 1000.1
+print(is_greater and is_not_equal)
+
+# 3rd program
+result1 = (2 * 2) + 2
+result2 = (2 * 2) + 2 + 0.0  # Добавляем 0.0 для приоритета сложения
+print(result1)
+print(result2)
+print(result1 == result2)
+
+# 4th program
+# Дана строка '123.456'
+input_string = '123.456'
+
+# Преобразуем строку в дробное число
+float_number = float(input_string)
+
+# Умножаем на 10, чтобы сместить 4 в целую часть
+shifted_number = float_number * 10
+
+# Получаем целую часть
+integer_part = int(shifted_number)
+
+# Получаем первую цифру после запятой
+first_digit_after_decimal = integer_part % 10
+
+print(first_digit_after_decimal)
