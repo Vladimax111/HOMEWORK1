@@ -1,0 +1,47 @@
+def introspection_info(obj):
+    info = {}
+
+    # Тип объекта
+    info['type'] = type(obj).__name__
+
+    # Атрибуты объекта
+    info['attributes'] = [attr for attr in dir(obj) if not callable(getattr(obj, attr)) and not attr.startswith('__')]
+
+    # Методы объекта
+    info['methods'] = [method for method in dir(obj) if callable(getattr(obj, method)) and not method.startswith('__')]
+
+    # Модуль, к которому объект принадлежит
+    info['module'] = obj.__module__ if hasattr(obj, '__module__') else 'None'
+
+    # Другие интересные свойства объекта
+    if isinstance(obj, int):
+        info['other_properties'] = {
+            'bit_length': obj.bit_length(),
+            'is_integer': isinstance(obj, int)
+        }
+    elif isinstance(obj, str):
+        info['other_properties'] = {
+            'length': len(obj),
+            'is_string': isinstance(obj, str)
+        }
+    elif isinstance(obj, list):
+        info['other_properties'] = {
+            'length': len(obj),
+            'is_list': isinstance(obj, list)
+        }
+    elif isinstance(obj, dict):
+        info['other_properties'] = {
+            'length': len(obj),
+            'is_dict': isinstance(obj, dict)
+        }
+    else:
+        info['other_properties'] = {}
+
+    return info
+
+# Пример использования
+number_info = introspection_info(42)
+print(number_info)
+
+string_info = introspection_info("Hello, World!")
+print(string_inf
