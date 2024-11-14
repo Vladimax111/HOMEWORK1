@@ -1,0 +1,56 @@
+import telebot
+from telebot import types
+from crud_functions import initiate_db, get_all_products, add_product
+
+# Создайте экземпляр бота
+bot = telebot.TeleBot('YOUR_TELEGRAM_BOT_TOKEN')
+
+# Главная клавиатура меню
+main_menu_keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+main_menu_keyboard.add(types.KeyboardButton('Купить'))
+
+# Inline меню для покупки продуктов
+inline_menu_keyboard = types.InlineKeyboardMarkup()
+for i in range(1, 5):
+    inline_menu_keyboard.add(types.InlineKeyboardButton(f'Product{i}', callback_data='product_buying'))
+
+# Функция для вывода списка товаров
+def get_buying_list(message):
+    products = get_all_products()
+    for product in products:
+        product_name = product[1]
+        product_description = product[2]
+        product_price = product[3]
+        bot.send_message(message.chat.id, f'Название: {product_name} | Описание: {product_description} | Цена: {product_price}')
+        # Отправка картинки продукта (замените 'product_image_url' на реальный URL или файл)
+        bot.send_photo(message.chat.id, 'product_image_url')
+    bot.send_message(message.chat.id, 'Выберите продукт для покупки:', reply_markup=inline_menu_keyboard)
+
+# Функция для подтверждения покупки
+def send_confirm_message(call):
+    bot.send_message(call.message.chat.id, 'Вы успешно приобрели продукт!')
+
+# Хэндлер для команды /start
+@bot.message_handler(commands=['start'])
+def start(message):
+    bot.send_message(message.chat.id, 'Добро пожаловать!', reply_markup=main_menu_keyboard)
+
+# Хэндлер для кнопки "Купить"
+@bot.message_handler(func=lambda message: message.text == 'Купить')
+def buy(message):
+    get_buying_list(message)
+
+# Callback хэндлер для покупки продукта
+@bot.callback_query_handler(func=lambda call: call.data == 'product_buying')
+def product_buying(call):
+    send_confirm_message(call)
+
+# Инициализация базы данных и добавление продуктов
+initiate_db()
+add_product('Product1', 'описание 1', 100)
+add_product('Product2', 'описание 2', 200)
+add_product('Product3', 'описание 3', 300)
+add_product('Product4', 'описание 4', 400)
+
+# Запуск бота
+bot.polling(none_stop=True)
