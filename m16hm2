@@ -1,0 +1,44 @@
+from fastapi import FastAPI, Path
+from typing import Annotated
+
+# Создаем объект приложения
+app = FastAPI()
+
+# Маршрут для страницы пользователя по user_id с валидацией
+@app.get("/user/{user_id}")
+def read_user(
+    user_id: Annotated[
+        int, 
+        Path(
+            title="Enter User ID", 
+            description="ID пользователя должно быть целым числом от 1 до 100",
+            ge=1,  # Минимальное значение
+            le=100  # Максимальное значение
+        )
+    ]
+):
+    return {"message": f"Вы вошли как пользователь № {user_id}"}
+
+# Маршрут для передачи имени и возраста в адресной строке с валидацией
+@app.get("/user/{username}/{age}")
+def get_user_info(
+    username: Annotated[
+        str, 
+        Path(
+            title="Enter username", 
+            description="Имя пользователя должно быть строкой длиной от 5 до 20 символов",
+            min_length=5,  # Минимальная длина
+            max_length=20  # Максимальная длина
+        )
+    ],
+    age: Annotated[
+        int, 
+        Path(
+            title="Enter age", 
+            description="Возраст должен быть целым числом от 18 до 120",
+            ge=18,  # Минимальное значение
+            le=120  # Максимальное значение
+        )
+    ]
+):
+    return {"message": f"Информация о пользователе. Имя: {username}, Возраст: {age}"}
